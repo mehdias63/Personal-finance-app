@@ -26,3 +26,11 @@ export type Bill = {
 	dueDate: string
 	paid: boolean
 }
+
+export type Data = {
+	balance: { current: number; income: number; expenses: number }
+	transactions: Transaction[]
+	budgets: Budget[]
+	pots: Pot[]
+	bills?: Bill[]
+}

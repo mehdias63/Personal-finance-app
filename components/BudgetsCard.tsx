@@ -1,7 +1,5 @@
 'use client'
 
-import React from 'react'
-
 type Budget = {
 	category: string
 	maximum: number
@@ -77,7 +75,6 @@ export default function BudgetsCard({
 							height: outer,
 							borderRadius: '9999px',
 							background: gradient,
-							boxShadow: 'inset 0 0 0 6px rgba(255,255,255,0.8)',
 						}}
 					/>
 					<div
@@ -96,7 +93,7 @@ export default function BudgetsCard({
 							justifyContent: 'center',
 						}}
 					>
-						<div className="font-extrabold text-lg">
+						<div className="font-bold text-lg">
 							${totalSpent.toFixed(0)}
 						</div>
 						<div className="text-xs text-gray-500">
@@ -118,25 +115,19 @@ export default function BudgetsCard({
 								>
 									<div className="flex items-center gap-3">
 										<span
-											className="w-3 h-7 rounded"
+											className="w-1 h-10 rounded inline-block"
 											style={{
 												background: b.theme ?? '#7dd3fc',
-												display: 'inline-block',
 											}}
 										/>
 										<div>
-											<div className="text-sm font-medium">
+											<div className="text-sm text-gray-600">
 												{b.category}
 											</div>
-											<div className="text-xs text-gray-500">
-												${b.spent.toFixed(2)} spent • {pctOfMax}% of $
-												{b.maximum.toFixed(0)}
+											<div className="text-sm  font-medium">
+												${b.maximum.toFixed(0)}
 											</div>
 										</div>
-									</div>
-
-									<div className="text-sm text-gray-600">
-										${b.maximum.toFixed(0)}
 									</div>
 								</li>
 							)

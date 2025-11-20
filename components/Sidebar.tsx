@@ -10,7 +10,7 @@ export default function Sidebar() {
 				<div className="text-2xl font-bold mb-8">finance</div>
 				<nav className="space-y-2">
 					<Link
-						href="/overview"
+						href="/"
 						className="flex items-center gap-3 p-3 rounded-lg bg-[#eef2f3]/0 hover:bg-white/5"
 					>
 						<Home className="w-4 h-4" /> <span>Overview</span>

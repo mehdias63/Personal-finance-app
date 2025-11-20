@@ -25,6 +25,7 @@ export default function TransactionsList({
 		<div className="bg-white rounded-xl p-6 shadow-sm">
 			<div className="flex justify-between items-center mb-4">
 				<h3 className="text-lg font-medium">{title}</h3>
+				<a className="text-sm text-gray-500">View All ▸</a>
 			</div>
 
 			<ul className="space-y-4">
@@ -46,23 +47,23 @@ export default function TransactionsList({
 										height={40}
 									/>
 								</div>
-								<div>
-									<div className="font-medium">{tx.name}</div>
-									<div className="text-xs text-gray-500">
-										{new Date(tx.date).toLocaleDateString()}
-									</div>
-								</div>
+								<div className="font-medium">{tx.name}</div>
 							</div>
-							<div
-								className={`text-sm ${
-									tx.amount >= 0
-										? 'text-emerald-600'
-										: 'text-gray-800'
-								}`}
-							>
-								{tx.amount >= 0
-									? `+ $${Math.abs(tx.amount).toFixed(2)}`
-									: `- $${Math.abs(tx.amount).toFixed(2)}`}
+							<div>
+								<div
+									className={`text-sm ${
+										tx.amount >= 0
+											? 'text-emerald-600'
+											: 'text-gray-800'
+									}`}
+								>
+									{tx.amount >= 0
+										? `+ $${Math.abs(tx.amount).toFixed(2)}`
+										: `- $${Math.abs(tx.amount).toFixed(2)}`}
+								</div>
+								<div className="text-xs text-gray-500">
+									{new Date(tx.date).toLocaleDateString()}
+								</div>
 							</div>
 						</li>
 					)
