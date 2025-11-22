@@ -1,26 +1,21 @@
 'use client'
 
-type Bill = {
-	id?: string
-	name?: string
-	amount: number
-	dueDate?: string
-	paid?: boolean
-}
+import { Transaction } from '@/types'
 
 type Props = {
-	bills?: Bill[]
+	transactions: Transaction[]
 }
 
-export default function RecurringBillsCard({ bills }: Props) {
-	const safeBills = bills ?? []
-	const paid = safeBills
-		.filter(b => b.amount > 0)
-		.reduce((sum, b) => sum + b.amount, 0)
+export default function RecurringBillsCard({ transactions }: Props) {
+	const recurring = transactions.filter(t => t.recurring)
 
-	const upcoming = safeBills
-		.filter(b => b.amount < 0)
-		.reduce((sum, b) => sum + Math.abs(b.amount), 0)
+	const paid = recurring
+		.filter(t => t.amount > 0)
+		.reduce((sum, t) => sum + t.amount, 0)
+
+	const upcoming = recurring
+		.filter(t => t.amount < 0)
+		.reduce((s, t) => s + Math.abs(t.amount), 0)
 
 	const dueSoon = Math.round(upcoming * 0.3 * 100) / 100
 

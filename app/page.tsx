@@ -37,9 +37,7 @@ export default function OverviewPage() {
 						budgets={budgets}
 						transactions={data.transactions}
 					/>
-					<RecurringBillsCard
-						bills={data.transactions.filter(t => t.recurring)}
-					/>
+					<RecurringBillsCard transactions={data.transactions} />
 				</div>
 			</div>
 		</div>
