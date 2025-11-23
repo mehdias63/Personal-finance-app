@@ -275,7 +275,7 @@ export default function BudgetsPage() {
 								>
 									<div className="flex items-center gap-3">
 										<span
-											className="w-2 h-6 rounded"
+											className="w-1 h-6 rounded"
 											style={{ background: b.theme }}
 										/>
 										<div>
