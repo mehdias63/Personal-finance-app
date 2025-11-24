@@ -21,7 +21,6 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { X } from 'lucide-react'
 
 const schema = z.object({
 	name: z.string().min(1, 'Name required'),
@@ -84,15 +83,7 @@ export default function AddPotModal({
 							Add a name, target and theme for this pot.
 						</DialogDescription>
 					</DialogHeader>
-					<button
-						aria-label="close"
-						className="text-gray-500"
-						onClick={() => onOpenChange(false)}
-					>
-						<X />
-					</button>
 				</div>
-
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="space-y-4 mt-3"

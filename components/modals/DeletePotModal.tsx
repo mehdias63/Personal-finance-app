@@ -8,7 +8,6 @@ import {
 	DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { X } from 'lucide-react'
 
 type PropsDel = {
 	open: boolean
@@ -38,15 +37,7 @@ export default function DeletePotModal({
 							This action cannot be undone.
 						</DialogDescription>
 					</DialogHeader>
-					<button
-						aria-label="close"
-						className="text-gray-500"
-						onClick={() => onOpenChange(false)}
-					>
-						<X />
-					</button>
 				</div>
-
 				<div className="flex justify-end gap-3 mt-6">
 					<Button
 						variant="outline"

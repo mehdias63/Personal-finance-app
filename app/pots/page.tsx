@@ -1,7 +1,6 @@
-// app/pots/page.tsx
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import dataJson from '@/data/data.json'
 import PotCard from '@/components/PotCard'
 import AddPotModal from '@/components/modals/AddPotModal'
@@ -24,12 +23,10 @@ export default function PotsPage() {
 
 	const [pots, setPots] = useState<Pot[]>(initialPots)
 
-	// CRUD modals
 	const [addOpen, setAddOpen] = useState(false)
 	const [editOpen, setEditOpen] = useState(false)
 	const [deleteOpen, setDeleteOpen] = useState(false)
 
-	// AddMoney / Withdraw modals
 	const [addMoneyOpen, setAddMoneyOpen] = useState(false)
 	const [withdrawOpen, setWithdrawOpen] = useState(false)
 
@@ -117,14 +114,11 @@ export default function PotsPage() {
 					/>
 				))}
 			</div>
-
-			{/* Modals */}
 			<AddPotModal
 				open={addOpen}
 				onOpenChange={setAddOpen}
 				onAdd={p => handleAdd(p)}
 			/>
-
 			<EditPotModal
 				open={editOpen}
 				onOpenChange={v => {
@@ -134,7 +128,6 @@ export default function PotsPage() {
 				pot={active}
 				onEdit={updated => handleEdit(updated, active?.name)}
 			/>
-
 			<DeletePotModal
 				open={deleteOpen}
 				onOpenChange={v => {
@@ -150,7 +143,6 @@ export default function PotsPage() {
 					}
 				}}
 			/>
-
 			<AddMoneyModal
 				open={addMoneyOpen}
 				onOpenChange={v => {
@@ -162,7 +154,6 @@ export default function PotsPage() {
 					handleConfirmAddMoney(amt)
 				}}
 			/>
-
 			<WithdrawMoneyModal
 				open={withdrawOpen}
 				onOpenChange={v => {
