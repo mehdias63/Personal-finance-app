@@ -1,11 +1,13 @@
 'use client'
 
-import { useMemo, useState, useReducer } from 'react'
+import { useMemo, useState } from 'react'
 import dataJson from '@/data/data.json'
-import BillsSummary from '@/components/bills/BillsSummary'
+import BillsSummaryDetails from '@/components/bills/BillsSummaryDetails'
 import BillsList from '@/components/bills/BillsList'
 import BillsSearch from '@/components/bills/BillsSearch'
 import BillsSort from '@/components/bills/BillsSort'
+import { SortOption } from '@/types'
+import BillsSummary from '@/components/bills/BillsSummary'
 
 type RawTransaction = {
 	avatar?: string
@@ -24,51 +26,6 @@ type Bill = {
 	paid: boolean
 	category?: string
 	date: string
-}
-
-type SummaryState = {
-	total: number
-	paidTotal: number
-	upcomingTotal: number
-	dueSoonCount: number
-}
-
-type Action = {
-	type: 'CALCULATE'
-	payload: Bill[]
-}
-
-function summaryReducer(
-	state: SummaryState,
-	action: Action,
-): SummaryState {
-	if (action.type !== 'CALCULATE') return state
-
-	const bills = action.payload
-	const now = new Date()
-	const today = now.getUTCDate()
-
-	const paidBills = bills.filter(b => {
-		const d = new Date(b.date).getUTCDate()
-		return d <= today
-	})
-
-	const dueSoon = bills.filter(b => {
-		const d = new Date(b.date).getUTCDate()
-		return d === today + 1 || d === today + 2
-	})
-
-	const upcomingBills = bills.filter(b => {
-		const d = new Date(b.date).getUTCDate()
-		return d > today + 2
-	})
-
-	return {
-		total: bills.reduce((s, b) => s + b.amount, 0),
-		paidTotal: paidBills.reduce((s, b) => s + b.amount, 0),
-		upcomingTotal: upcomingBills.reduce((s, b) => s + b.amount, 0),
-		dueSoonCount: dueSoon.length,
-	}
 }
 
 export default function BillsPage() {
@@ -100,18 +57,9 @@ export default function BillsPage() {
 			})
 	}, [rawTransactions])
 
-	const [bills, setBills] = useState<Bill[]>(initialBills)
+	const [bills] = useState<Bill[]>(initialBills)
 	const [query, setQuery] = useState('')
-	const [sort, setSort] = useState<
-		'latest' | 'oldest' | 'az' | 'za' | 'highest' | 'lowest'
-	>('latest')
-
-	const [summary, dispatch] = useReducer(summaryReducer, {
-		total: 0,
-		paidTotal: 0,
-		upcomingTotal: 0,
-		dueSoonCount: 0,
-	})
+	const [sort, setSort] = useState<SortOption>('latest')
 
 	const visible = useMemo(() => {
 		let list = bills.slice()
@@ -141,8 +89,6 @@ export default function BillsPage() {
 			list.sort((a, b) => a.amount - b.amount)
 		}
 
-		dispatch({ type: 'CALCULATE', payload: list })
-
 		return list
 	}, [bills, query, sort])
 
@@ -152,12 +98,9 @@ export default function BillsPage() {
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<div className="lg:col-span-1">
-					<BillsSummary
-						total={summary.total}
-						paidTotal={summary.paidTotal}
-						upcomingTotal={summary.upcomingTotal}
-					/>
+					<BillsSummary bills={visible} />
 				</div>
+
 				<div className="lg:col-span-2">
 					<div className="bg-white rounded-xl p-4 shadow-sm">
 						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

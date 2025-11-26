@@ -6,9 +6,11 @@ import {
 	SelectItem,
 } from '@/components/ui/select'
 
+import { SortOption } from '@/types'
+
 type Props = {
-	value: 'latest' | 'oldest' | 'az' | 'za' | 'highest' | 'lowest'
-	onChange: (v: Props['value']) => void
+	value: SortOption
+	onChange: (v: SortOption) => void
 }
 
 export default function BillsSort({ value, onChange }: Props) {

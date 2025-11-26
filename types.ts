@@ -21,10 +21,13 @@ export type Budget = {
 }
 
 export type Bill = {
-	name: string
+	id: string
+	title: string
 	amount: number
-	dueDate: string
+	dueLabel: string
 	paid: boolean
+	category?: string
+	date: string
 }
 
 export type Data = {
@@ -34,3 +37,11 @@ export type Data = {
 	pots: Pot[]
 	bills?: Bill[]
 }
+
+export type SortOption =
+	| 'latest'
+	| 'oldest'
+	| 'az'
+	| 'za'
+	| 'highest'
+	| 'lowest'
