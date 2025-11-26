@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useReducer } from 'react'
 import dataJson from '@/data/data.json'
 import BillsSummary from '@/components/bills/BillsSummary'
 import BillsList from '@/components/bills/BillsList'
@@ -26,6 +26,51 @@ type Bill = {
 	date: string
 }
 
+type SummaryState = {
+	total: number
+	paidTotal: number
+	upcomingTotal: number
+	dueSoonCount: number
+}
+
+type Action = {
+	type: 'CALCULATE'
+	payload: Bill[]
+}
+
+function summaryReducer(
+	state: SummaryState,
+	action: Action,
+): SummaryState {
+	if (action.type !== 'CALCULATE') return state
+
+	const bills = action.payload
+	const now = new Date()
+	const today = now.getUTCDate()
+
+	const paidBills = bills.filter(b => {
+		const d = new Date(b.date).getUTCDate()
+		return d <= today
+	})
+
+	const dueSoon = bills.filter(b => {
+		const d = new Date(b.date).getUTCDate()
+		return d === today + 1 || d === today + 2
+	})
+
+	const upcomingBills = bills.filter(b => {
+		const d = new Date(b.date).getUTCDate()
+		return d > today + 2
+	})
+
+	return {
+		total: bills.reduce((s, b) => s + b.amount, 0),
+		paidTotal: paidBills.reduce((s, b) => s + b.amount, 0),
+		upcomingTotal: upcomingBills.reduce((s, b) => s + b.amount, 0),
+		dueSoonCount: dueSoon.length,
+	}
+}
+
 export default function BillsPage() {
 	const rawTransactions: RawTransaction[] =
 		(dataJson as any).transactions ?? []
@@ -48,7 +93,7 @@ export default function BillsPage() {
 					title: t.name,
 					amount: Math.abs(t.amount),
 					dueLabel,
-					paid: t.amount > 0,
+					paid: false,
 					category: t.category,
 					date: t.date,
 				}
@@ -60,6 +105,13 @@ export default function BillsPage() {
 	const [sort, setSort] = useState<
 		'latest' | 'oldest' | 'az' | 'za' | 'highest' | 'lowest'
 	>('latest')
+
+	const [summary, dispatch] = useReducer(summaryReducer, {
+		total: 0,
+		paidTotal: 0,
+		upcomingTotal: 0,
+		dueSoonCount: 0,
+	})
 
 	const visible = useMemo(() => {
 		let list = bills.slice()
@@ -89,23 +141,10 @@ export default function BillsPage() {
 			list.sort((a, b) => a.amount - b.amount)
 		}
 
+		dispatch({ type: 'CALCULATE', payload: list })
+
 		return list
 	}, [bills, query, sort])
-
-	const totalBills = useMemo(
-		() => visible.reduce((s, b) => s + b.amount, 0),
-		[visible],
-	)
-	const paidBillsTotal = useMemo(
-		() =>
-			visible.filter(b => b.paid).reduce((s, b) => s + b.amount, 0),
-		[visible],
-	)
-	const upcomingTotal = totalBills - paidBillsTotal
-	const dueSoonCount = useMemo(
-		() => visible.filter(b => !b.paid).length,
-		[visible],
-	)
 
 	return (
 		<div className="max-w-7xl mx-auto p-6">
@@ -114,10 +153,9 @@ export default function BillsPage() {
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<div className="lg:col-span-1">
 					<BillsSummary
-						total={totalBills}
-						paidTotal={paidBillsTotal}
-						upcomingTotal={upcomingTotal}
-						dueSoonCount={dueSoonCount}
+						total={summary.total}
+						paidTotal={summary.paidTotal}
+						upcomingTotal={summary.upcomingTotal}
 					/>
 				</div>
 				<div className="lg:col-span-2">

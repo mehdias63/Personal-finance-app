@@ -2,14 +2,12 @@ type Props = {
 	total: number
 	paidTotal: number
 	upcomingTotal: number
-	dueSoonCount: number
 }
 
 export default function BillsSummary({
 	total,
 	paidTotal,
 	upcomingTotal,
-	dueSoonCount,
 }: Props) {
 	return (
 		<div className="space-y-6">
@@ -67,7 +65,7 @@ export default function BillsSummary({
 					<div className="flex justify-between">
 						<div className="text-red-500">Due Soon</div>
 						<div className="text-red-500 font-medium">
-							{dueSoonCount} (${upcomingTotal.toFixed(2)})
+							${upcomingTotal.toFixed(2)}
 						</div>
 					</div>
 				</div>
