@@ -21,6 +21,7 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { THEME_COLORS } from '@/lib/constants'
 
 const schema = z.object({
 	name: z.string().min(1, 'Name required'),
@@ -29,16 +30,6 @@ const schema = z.object({
 })
 
 type FormValues = z.infer<typeof schema>
-
-const themes = [
-	{ label: 'Green', value: '#277C78' },
-	{ label: 'Yellow', value: '#F2CD6D' },
-	{ label: 'Cyan', value: '#82C9D7' },
-	{ label: 'Navy', value: '#0B2545' },
-	{ label: 'Red', value: '#E55353' },
-	{ label: 'Purple', value: '#826CB0' },
-	{ label: 'Turquoise', value: '#40E0D0' },
-]
 
 type PropsAdd = {
 	open: boolean
@@ -115,7 +106,7 @@ export default function AddPotModal({
 										<SelectValue placeholder="Select theme" />
 									</SelectTrigger>
 									<SelectContent>
-										{themes.map(t => (
+										{THEME_COLORS.map(t => (
 											<SelectItem key={t.value} value={t.value}>
 												<div className="flex items-center gap-3">
 													<span

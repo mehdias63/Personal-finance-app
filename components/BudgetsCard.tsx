@@ -1,5 +1,8 @@
 'use client'
 
+import { formatCurrency } from '@/lib/utils'
+import styles from './BudgetsCard.module.css'
+
 type Budget = {
 	category: string
 	maximum: number
@@ -60,44 +63,32 @@ export default function BudgetsCard({
 		<div className="bg-white rounded-xl p-6 shadow-sm">
 			<div className="flex justify-between items-start">
 				<h3 className="text-lg font-medium">Budgets</h3>
-				<a className="text-sm text-gray-500">See Details ▸</a>
+				<button type="button" className="text-sm text-gray-500 hover:text-gray-700">See Details ▸</button>
 			</div>
 
 			<div className="mt-4 flex gap-6 items-center">
 				<div
-					style={{ width: outer, height: outer }}
-					className="relative flex-none"
+					className={styles.donutOuter}
+					style={{ width: outer, height: outer } as React.CSSProperties}
 				>
 					<div
 						aria-hidden
+						className={styles.donutBackground}
 						style={{
 							width: outer,
 							height: outer,
-							borderRadius: '9999px',
 							background: gradient,
-						}}
+						} as React.CSSProperties}
 					/>
 					<div
-						style={{
-							width: inner,
-							height: inner,
-							borderRadius: '9999px',
-							background: 'white',
-							position: 'absolute',
-							left: '50%',
-							top: '50%',
-							transform: 'translate(-50%, -50%)',
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}
+						className={styles.donutCenter}
+						style={{ width: inner, height: inner } as React.CSSProperties}
 					>
 						<div className="font-bold text-lg">
-							${totalSpent.toFixed(0)}
+							${formatCurrency(totalSpent)}
 						</div>
 						<div className="text-xs text-gray-500">
-							of ${totalMax.toFixed(0)} limit
+							of ${formatCurrency(totalMax)} limit
 						</div>
 					</div>
 				</div>
@@ -115,17 +106,15 @@ export default function BudgetsCard({
 								>
 									<div className="flex items-center gap-3">
 										<span
-											className="w-1 h-10 rounded inline-block"
-											style={{
-												background: b.theme ?? '#7dd3fc',
-											}}
+											className={styles.themeBar}
+											style={{ backgroundColor: b.theme ?? '#7dd3fc' } as React.CSSProperties}
 										/>
 										<div>
 											<div className="text-sm text-gray-600">
 												{b.category}
 											</div>
 											<div className="text-sm  font-medium">
-												${b.maximum.toFixed(0)}
+												${formatCurrency(b.maximum)}
 											</div>
 										</div>
 									</div>

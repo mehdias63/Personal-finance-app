@@ -25,7 +25,7 @@ export default function TransactionsList({
 		<div className="bg-white rounded-xl p-6 shadow-sm">
 			<div className="flex justify-between items-center mb-4">
 				<h3 className="text-lg font-medium">{title}</h3>
-				<a className="text-sm text-gray-500">View All ▸</a>
+				<button type="button" className="text-sm text-gray-500 hover:text-gray-700">View All ▸</button>
 			</div>
 
 			<ul className="space-y-4">

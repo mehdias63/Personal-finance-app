@@ -1,6 +1,7 @@
 'use client'
 
 import { Currency } from 'lucide-react'
+import { formatCurrency } from '@/lib/utils'
 
 type Pot = {
 	name: string
@@ -25,7 +26,7 @@ export default function PotsCard({ pots = [] }: Props) {
 		<div className="bg-white rounded-xl p-6 shadow-sm">
 			<div className="flex justify-between items-start">
 				<h3 className="text-lg font-medium">Pots</h3>
-				<a className="text-sm text-gray-500">See Details ▸</a>
+				<button type="button" className="text-sm text-gray-500 hover:text-gray-700">See Details ▸</button>
 			</div>
 			<div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div className="rounded-xl bg-[#f3efec] p-5 flex items-center gap-4">
@@ -35,15 +36,15 @@ export default function PotsCard({ pots = [] }: Props) {
 					<div>
 						<div className="text-sm text-gray-600">Total Saved</div>
 						<div className="text-3xl font-bold mt-1">
-							${totalSaved.toFixed(0)}
+							${formatCurrency(totalSaved)}
 						</div>
 					</div>
 				</div>
 				<div className="space-y-4">
 					{rows.map((pair, rowIndex) => (
-						<div key={rowIndex} className="grid grid-cols-2 gap-6">
-							{pair.map((pot, index) => (
-								<div key={index} className="flex items-center gap-3">
+						<div key={`row-${rowIndex}`} className="grid grid-cols-2 gap-6">
+							{pair.map((pot) => (
+								<div key={pot.name} className="flex items-center gap-3">
 									<div
 										className="w-1 h-10 rounded"
 										style={{ background: pot.theme ?? '#10b981' }}

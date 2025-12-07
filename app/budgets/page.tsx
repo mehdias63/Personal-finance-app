@@ -5,6 +5,9 @@ import dataJson from '@/data/data.json'
 import { z } from 'zod'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { THEME_COLORS } from '@/lib/constants'
+import { formatCurrency } from '@/lib/utils'
+import styles from './page.module.css'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -52,16 +55,6 @@ type Transaction = {
 	recurring?: boolean
 }
 
-const themeOptions = [
-	{ label: 'Green', value: '#277C78' },
-	{ label: 'Yellow', value: '#F2CD6D' },
-	{ label: 'Cyan', value: '#82C9D7' },
-	{ label: 'Navy', value: '#0B2545' },
-	{ label: 'Red', value: '#E55353' },
-	{ label: 'Purple', value: '#826CB0' },
-	{ label: 'Turquoise', value: '#40E0D0' },
-]
-
 // zod schema for add/edit forms
 const budgetSchema = z.object({
 	category: z.string().min(1, 'Category is required'),
@@ -77,9 +70,9 @@ type FormValues = {
 
 export default function BudgetsPage() {
 	// load initial data from data.json
-	const initialBudgets: Budget[] = (dataJson as any).budgets ?? []
-	const transactions: Transaction[] =
-		(dataJson as any).transactions ?? []
+	const data = dataJson as { budgets?: Budget[]; transactions?: Transaction[] }
+	const initialBudgets: Budget[] = data.budgets ?? []
+	const transactions: Transaction[] = data.transactions ?? []
 
 	// local state (start from data.json but allow local edits)
 	const [budgets, setBudgets] = useState<Budget[]>(initialBudgets)
@@ -139,7 +132,7 @@ export default function BudgetsPage() {
 		resolver: zodResolver(budgetSchema),
 		defaultValues: {
 			category: '',
-			maximum: undefined as any,
+			maximum: 0,
 			theme: '',
 		},
 	})
@@ -176,7 +169,7 @@ export default function BudgetsPage() {
 		resolver: zodResolver(budgetSchema),
 		defaultValues: {
 			category: '',
-			maximum: undefined as any,
+			maximum: 0,
 			theme: '',
 		},
 	})
@@ -245,13 +238,8 @@ export default function BudgetsPage() {
 				<div className="bg-white rounded-2xl p-6 shadow-sm border border-[#f0ebe7]">
 					<div className="flex items-center gap-6">
 						<div
-							style={{
-								width: 140,
-								height: 140,
-								borderRadius: 9999,
-								background: donutGradient,
-								boxShadow: 'inset 0 0 0 12px rgba(255,255,255,0.9)',
-							}}
+							className={styles.donutChart}
+							style={{ '--donut-gradient': donutGradient } as React.CSSProperties}
 						/>
 						<div>
 							<div className="text-2xl font-extrabold">
@@ -275,19 +263,19 @@ export default function BudgetsPage() {
 								>
 									<div className="flex items-center gap-3">
 										<span
-											className="w-1 h-6 rounded"
-											style={{ background: b.theme }}
+											className={styles.themeBar}
+											style={{ '--bar-color': b.theme } as React.CSSProperties}
 										/>
 										<div>
 											<div className="text-sm">{b.category}</div>
 											<div className="text-xs text-gray-500">
-												${b.spent.toFixed(2)} of $
-												{b.maximum.toFixed(0)}
+												${formatCurrency(b.spent)} of $
+												{formatCurrency(b.maximum)}
 											</div>
 										</div>
 									</div>
 									<div className="text-sm font-medium">
-										${b.maximum.toFixed(0)}
+										${formatCurrency(b.maximum)}
 									</div>
 								</li>
 							))}
@@ -313,15 +301,15 @@ export default function BudgetsPage() {
 									<div>
 										<div className="flex items-center gap-3">
 											<span
-												className="w-3 h-3 rounded-full"
-												style={{ background: b.theme }}
+												className={styles.themeIndicator}
+												style={{ '--indicator-color': b.theme } as React.CSSProperties}
 											/>
 											<div className="text-sm font-medium">
 												{b.category}
 											</div>
 										</div>
 										<div className="text-xs text-gray-500">
-											Maximum of ${b.maximum.toFixed(0)}
+											Maximum of ${formatCurrency(b.maximum)}
 										</div>
 									</div>
 
@@ -362,11 +350,11 @@ export default function BudgetsPage() {
 								<div className="mt-4">
 									<div className="bg-[#f4f1ee] rounded-full h-3 overflow-hidden">
 										<div
-											className="h-3 rounded-full"
+											className={styles.progressBar}
 											style={{
-												width: `${Math.min(100, pct)}%`,
-												background: b.theme,
-											}}
+												'--progress-width': `${Math.min(100, pct)}%`,
+												'--progress-color': b.theme,
+											} as React.CSSProperties}
 										/>
 									</div>
 									<div className="flex items-center justify-between mt-3">
@@ -377,10 +365,10 @@ export default function BudgetsPage() {
 									</div>
 									<div className="flex items-center justify-between mt-1">
 										<div className="text-sm font-semibold">
-											${b.spent.toFixed(2)}
+											${formatCurrency(b.spent)}
 										</div>
 										<div className="text-sm font-semibold">
-											${remaining.toFixed(2)}
+											${formatCurrency(remaining)}
 										</div>
 									</div>
 								</div>
@@ -404,9 +392,9 @@ export default function BudgetsPage() {
 											>
 												<div className="flex items-center gap-3">
 													<Avatar className="h-8 w-8">
-														<AvatarImage src={t.avatar} />
+														<AvatarImage src={t.avatar} alt={t.name || 'Transaction'} />
 														<AvatarFallback>
-															{t.name?.[0] ?? 'U'}
+															{t.name?.[0]?.toUpperCase() || 'T'}
 														</AvatarFallback>
 													</Avatar>
 													<div>
@@ -433,8 +421,8 @@ export default function BudgetsPage() {
 													}`}
 												>
 													{t.amount < 0
-														? `-$${Math.abs(t.amount).toFixed(2)}`
-														: `+$${t.amount.toFixed(2)}`}
+														? `-$${formatCurrency(Math.abs(t.amount))}`
+														: `+$${formatCurrency(t.amount)}`}
 												</div>
 											</li>
 										))}
@@ -500,7 +488,7 @@ export default function BudgetsPage() {
 							/>
 							{addErrors?.category && (
 								<p className="text-xs text-red-600 mt-1">
-									{(addErrors.category as any).message}
+									{addErrors.category.message}
 								</p>
 							)}
 						</div>
@@ -514,7 +502,7 @@ export default function BudgetsPage() {
 							/>
 							{addErrors?.maximum && (
 								<p className="text-xs text-red-600 mt-1">
-									{(addErrors.maximum as any).message}
+									{addErrors.maximum.message}
 								</p>
 							)}
 						</div>
@@ -533,12 +521,12 @@ export default function BudgetsPage() {
 											<SelectValue placeholder="Pick a theme color" />
 										</SelectTrigger>
 										<SelectContent>
-											{themeOptions.map(t => (
+											{THEME_COLORS.map(t => (
 												<SelectItem key={t.value} value={t.value}>
 													<div className="flex items-center gap-3">
 														<span
-															className="w-4 h-4 rounded-full"
-															style={{ background: t.value }}
+															className={styles.colorSwatch}
+															style={{ '--swatch-color': t.value } as React.CSSProperties}
 														/>
 														<span>{t.label}</span>
 													</div>
@@ -550,7 +538,7 @@ export default function BudgetsPage() {
 							/>
 							{addErrors?.theme && (
 								<p className="text-xs text-red-600 mt-1">
-									{(addErrors.theme as any).message}
+									{addErrors.theme.message}
 								</p>
 							)}
 						</div>
@@ -620,7 +608,7 @@ export default function BudgetsPage() {
 								/>
 								{editErrors?.category && (
 									<p className="text-xs text-red-600 mt-1">
-										{(editErrors.category as any).message}
+										{editErrors.category.message}
 									</p>
 								)}
 							</div>
@@ -635,7 +623,7 @@ export default function BudgetsPage() {
 								/>
 								{editErrors?.maximum && (
 									<p className="text-xs text-red-600 mt-1">
-										{(editErrors.maximum as any).message}
+										{editErrors.maximum.message}
 									</p>
 								)}
 							</div>
@@ -654,12 +642,12 @@ export default function BudgetsPage() {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{themeOptions.map(t => (
+												{THEME_COLORS.map(t => (
 													<SelectItem key={t.value} value={t.value}>
 														<div className="flex items-center gap-3">
 															<span
-																className="w-4 h-4 rounded-full"
-																style={{ background: t.value }}
+																className={styles.colorSwatch}
+																style={{ '--swatch-color': t.value } as React.CSSProperties}
 															/>
 															<span>{t.label}</span>
 														</div>
@@ -671,7 +659,7 @@ export default function BudgetsPage() {
 								/>
 								{editErrors?.theme && (
 									<p className="text-xs text-red-600 mt-1">
-										{(editErrors.theme as any).message}
+										{editErrors.theme.message}
 									</p>
 								)}
 							</div>

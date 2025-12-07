@@ -53,12 +53,12 @@ export default function PotCard({
 					</DropdownMenuTrigger>
 
 					<DropdownMenuContent align="end" className="w-32">
-						<DropdownMenuItem onClick={() => onEdit && onEdit()}>
+						<DropdownMenuItem onClick={() => onEdit?.()}>
 							Edit
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="text-red-600"
-							onClick={() => onDelete && onDelete()}
+							onClick={() => onDelete?.()}
 						>
 							Delete
 						</DropdownMenuItem>
@@ -94,14 +94,14 @@ export default function PotCard({
 					<Button
 						variant="outline"
 						className="flex-1"
-						onClick={() => onAddMoney && onAddMoney()}
+						onClick={() => onAddMoney?.()}
 					>
 						+ Add Money
 					</Button>
 					<Button
 						variant="outline"
 						className="flex-1"
-						onClick={() => onWithdraw && onWithdraw()}
+						onClick={() => onWithdraw?.()}
 					>
 						Withdraw
 					</Button>

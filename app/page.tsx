@@ -40,11 +40,11 @@ export default function OverviewPage() {
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 				<StatCard
 					title="Current Balance"
-					value={`$4,836.00`}
+					value={`$${data.balance.current.toFixed(2)}`}
 					variant="primary"
 				/>
-				<StatCard title="Income" value={`$3,814.25`} />
-				<StatCard title="Expenses" value={`$1,700.50`} />
+				<StatCard title="Income" value={`$${data.balance.income.toFixed(2)}`} />
+				<StatCard title="Expenses" value={`$${data.balance.expenses.toFixed(2)}`} />
 			</div>
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<div className="lg:col-span-2 space-y-6">

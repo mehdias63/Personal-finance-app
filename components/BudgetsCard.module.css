@@ -1,0 +1,32 @@
+/* Donut Chart Container */
+.donutOuter {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Donut Chart Background */
+.donutBackground {
+  border-radius: 9999px;
+}
+
+/* Donut Center */
+.donutCenter {
+  border-radius: 9999px;
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Theme bar - uses inline background via className combination */
+.themeBar {
+  width: 0.25rem;
+  height: 2.5rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+}

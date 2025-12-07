@@ -1,0 +1,16 @@
+{
+  "html.validate.styles": false,
+  "css.lint.validProperties": [],
+  "microsoft-edge-tools.webhint.enable": false,
+  "vscode-edge-devtools.webhint": false,
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": false
+    }
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": false
+    }
+  }
+}
