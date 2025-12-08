@@ -5,12 +5,12 @@
   "vscode-edge-devtools.webhint": false,
   "[typescript]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll": false
+      "source.fixAll": "never"
     }
   },
   "[typescriptreact]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll": false
+      "source.fixAll": "never"
     }
   }
 }

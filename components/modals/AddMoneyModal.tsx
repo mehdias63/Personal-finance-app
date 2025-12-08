@@ -17,10 +17,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 const addSchema = z.object({
 	amount: z
-		.number({ invalid_type_error: 'Amount must be a number' })
+		.number()
 		.min(0.01, 'Amount must be greater than 0')
 		.max(1000000, 'Amount cannot exceed $1,000,000')
-		.refine((val) => !isNaN(val) && isFinite(val), {
+		.refine(val => !isNaN(val) && isFinite(val), {
 			message: 'Amount must be a valid number',
 		}),
 })
